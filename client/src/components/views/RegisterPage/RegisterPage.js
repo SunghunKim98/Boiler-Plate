@@ -1,6 +1,7 @@
 import React,{ useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../../../_actions/user_action'
+import { registerUser } from '../../../_actions/user_action'
+import {withRouter} from 'react-router-dom'
 
 function RegisterPage(props) {
 
@@ -27,8 +28,10 @@ function RegisterPage(props) {
 
     const onSubmitHandler = (event) => {
         event.preventDefault(); //-> page refresh를 막아주기 위해
-        //console.log(Email)
-        //console.log(Password)
+
+        if(Password !== ConfirmPassword){
+            return alert('비밀번호가 같지 않습니다.')
+        }
 
         let body = {
             email: Email,
@@ -36,12 +39,12 @@ function RegisterPage(props) {
             password: Password
         }
 
-        dispatch(loginUser(body))
+        dispatch(registerUser(body))
             .then(response => {
-                if(response.payload.loginSuccess){
-                    props.history.push('/')
+                if(response.payload.success){
+                    props.history.push('/login')
                 } else{
-                    alert('Error!')
+                    alert('Failed to sign up!')
                 }
             })  
     }
@@ -67,4 +70,4 @@ function RegisterPage(props) {
     )
 }
 
-export default RegisterPage
+export default withRouter(RegisterPage)
